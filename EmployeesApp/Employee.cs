@@ -15,7 +15,31 @@ namespace EmployeesApp
         public static void WriteEmployee(Employee employee)
         {
             var employeeData = $"{employee.Name}, {employee.Title}";
-            FileHelper.WriteTextFile(TEXT_FILE_NAME, employeeData);
+            FileHelper.WriteTextFileAsync(TEXT_FILE_NAME, employeeData);
+        }
+
+        public async static Task<ICollection<Employee>>
+            GetAllEmployeesAsync()
+        {
+            var employees = new List<Employee>();
+            var content = await 
+                FileHelper.ReadTextFileAsync(TEXT_FILE_NAME);
+            var lines = content.Split('\r', '\n');
+            foreach(var line in lines)
+            {
+                if (string.IsNullOrEmpty(line))
+                    continue;
+
+                var lineParts = line.Split(',');
+                var employee = new Employee
+                {
+                    Name = lineParts[0],
+                    Title = lineParts[1]
+                };
+                employees.Add(employee);
+            }
+
+            return employees;
         }
     }
 }

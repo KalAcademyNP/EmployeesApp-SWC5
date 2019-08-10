@@ -10,7 +10,7 @@ namespace EmployeesApp
 {
     public static class FileHelper
     {
-        public async static void WriteTextFile(string filename,
+        public async static void WriteTextFileAsync(string filename,
             string content)
         {
             var storageFolder = ApplicationData.Current.LocalFolder;
@@ -21,6 +21,20 @@ namespace EmployeesApp
             var textWriter = new DataWriter(textStream);
             textWriter.WriteString(content);
             await textWriter.StoreAsync();
+
+        }
+
+        public async static Task<string> ReadTextFileAsync
+            (string filename)
+        {
+            var storageFolder = ApplicationData.Current.LocalFolder;
+            var textFile = await storageFolder.GetFileAsync(filename);
+            var textStream = await textFile.OpenReadAsync();
+
+            var textReader = new DataReader(textStream);
+            var textLength = textStream.Size;
+            await textReader.LoadAsync((uint)textLength);
+            return textReader.ReadString((uint)textLength);
 
         }
     }

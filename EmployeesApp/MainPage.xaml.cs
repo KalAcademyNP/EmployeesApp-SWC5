@@ -27,6 +27,12 @@ namespace EmployeesApp
             this.InitializeComponent();
         }
 
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            this.DataContext = await Employee.GetAllEmployeesAsync();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(AddEmployeePage));
